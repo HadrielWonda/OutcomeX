@@ -1,0 +1,16 @@
+
+release-type: go
+package-name: outcomex
+bump-minor-pre-major: true
+changelog-types:
+  - type: feat
+    section: Features
+    hidden: false
+  - type: fix
+    section: Bug Fixes
+    hidden: false
+  - type: docs
+    section: Documentation
+    hidden: false
+  - type: chore
+    hidden: true
