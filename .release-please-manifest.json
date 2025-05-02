@@ -1,0 +1,9 @@
+{
+    ".": {
+      "releaseType": "go",
+      "packageName": "outcomex",
+      "component": "core",
+      "bumpMinorPreMajor": true,
+      "versionFile": "go.mod"
+    }
+  }

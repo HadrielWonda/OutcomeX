@@ -1,8 +1,10 @@
 name: Release Please
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 permissions:
   contents: write
   pull-requests: write
@@ -16,4 +18,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: go
-          command: manifest
+          command: default
+          default-branch: main
+          changelog-types: |
+            feat: Features
+            fix: Bug Fixes
+            docs: Documentation

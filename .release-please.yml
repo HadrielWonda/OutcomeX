@@ -1,8 +1,8 @@
-
 release-type: go
 package-name: outcomex
 bump-minor-pre-major: true
-changelog-types:
+handle-github-release: true
+changelog-sections:
   - type: feat
     section: Features
     hidden: false
@@ -12,5 +12,3 @@ changelog-types:
   - type: docs
     section: Documentation
     hidden: false
-  - type: chore
-    hidden: true
