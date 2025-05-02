@@ -29,7 +29,11 @@ jobs:
             ${{ runner.os }}-go-
             
       - name: Run tests
-        run: go test -v -coverprofile=coverage.out ./...
+        run: go test -v -coverprofile=coverage.out \
+              -coverpkg=./... \
+              -race \
+              -timeout 2m \
+              ./...
         
       - name: Upload coverage
         uses: codecov/codecov-action@v3

@@ -38,19 +38,77 @@ func TestThenChain(t *testing.T) {
 }
 
 func TestAsyncTimeout(t *testing.T) {
-    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)
+    t.Parallel()
+    
+    // Use shorter timings with buffer
+    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
     defer cancel()
 
+    slowFunc := func() Outcome[int] {
+        time.Sleep(10 * time.Millisecond) // Longer than context timeout
+        return Success(42)
+    }
+
+    ao := Async(ctx, slowFunc)
+    result := ao.Await()
+
+    if result.IsSuccess() {
+        t.Error("Expected timeout failure but got success")
+    }
+    
+    // Verify error type
+    firstErr := result.FirstError()
+    if firstErr.Code != "timeout" {
+        t.Errorf("Expected timeout error, got %s", firstErr.Code)
+    }
+}
+
+func TestAsyncSuccess(t *testing.T) {
+    t.Parallel()
+    
+    ctx := context.Background()
     ao := Async(ctx, func() Outcome[int] {
-        time.Sleep(20 * time.Millisecond)
         return Success(42)
     })
     
     result := ao.Await()
-    if result.IsSuccess() {
-        t.Error("Should have timed out")
+    if result.Value() != 42 {
+        t.Error("Async success value mismatch")
     }
 }
+
+
+func TestThenAsync(t *testing.T) {
+    t.Parallel()
+    
+    ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
+    defer cancel()
+
+    ao := Async(ctx, func() Outcome[int] {
+        return Success(2)
+    }).
+    ThenAsync(ctx, func(n int) Outcome[int] {
+        return Success(n * 3)
+    })
+
+    result := ao.Await()
+    if result.Value() != 6 {
+        t.Error("ThenAsync chain failed")
+    }
+}
+
+func TestCombineSuccess(t *testing.T) {
+    outcomes := []Outcome[any]{
+        Success[any]("test"),
+        Success[any](42),
+    }
+    
+    combined := Combine(outcomes...)
+    if len(combined.Value()) != 2 {
+        t.Error("Combine success count mismatch")
+    }
+}
+
 
 func TestErrorConversion(t *testing.T) {
     err := errors.New("standard error")
