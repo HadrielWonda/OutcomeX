@@ -1,5 +1,7 @@
-module OutcomeX
+module github.com/hadrielwonda/outcomex
 
-go 1.24.2
+go 1.23.0
 
-require github.com/hadrielwonda/outcomex v0.0.0-20250502193517-186d299b1671 // indirect
+toolchain go1.24.2
+
+require golang.org/x/sync v0.13.0

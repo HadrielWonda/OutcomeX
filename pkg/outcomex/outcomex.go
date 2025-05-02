@@ -7,10 +7,13 @@ type Outcome[T any] = internal.Outcome[T]
 type Error = internal.Error
 type AsyncOutcome[T any] = internal.AsyncOutcome[T]
 
+func Success[T any](value T) internal.Outcome[T] {
+    return internal.Success(value)
+}
+
 var (
-    Success         = internal.Success
-    Failure         = internal.Failure
+    Failure         = internal.Failure[any]
     NewError        = internal.NewError
     ValidationError = internal.ValidationError
-    WrapOperation   = internal.WrapOperation
+    WrapOperation   = internal.WrapOperation[string] // Replace 'string' with the desired type
 )
